@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <script type="text/javascript" src="/js/script.js"></script>
+    <script th:if="${noteIsSelected}" th:text="'noteID = ' + ${selectedNote}"></script>
+    <script th:if="${noteIsSelected}">
+      function saveNote(srcId, upd) {
+        let note_name = document.getElementById("noteName")
+        let note_body = document.getElementById("noteBody")
+        axios.get("/request/save_note", {
+            withCredentials: true,
+            params: {
+                "id": srcId,
+                "name": note_name.value,
+                "body": note_body.value
+            }
+        }).then(function (object){
+            if (upd) {
+                location.reload()
+            }
+        });
+      }
+    </script>
+    <title>Заметки</title>
+  </head>
+  <body id="body">
+    <header class="header">
+      <div class="header-backlink">
+        <a th:href="@{/}" class="header-title">Заметки</a>
+      </div>
+      <div class="header-actions-block">
+        <div class="search-form-block">
+          <form method="get" class="search-form" th:action="@{/search}" th:object="${search}">
+            <div class="search-form-row">
+              <div class="form-item">
+                <input type="search" placeholder="Поиск" class="form-input search-place" name="search" th:field="${search.input}"/>
+              </div>
+              <div class="form-item">
+                <button type="submit" class="button" value="Найти">Найти</button>
+              </div>
+            </div>
+            <div class="search-form-row search-form-checkboxes">
+              <div class="form-item">
+                <input type="radio" name="search_notes" id="search_groups" value="1" th:field="${search.target}"/>
+                <label class="form-label" for="search_groups">Группы</label>
+              </div>
+              <div class="form-item">
+                <input type="radio" name="search_notes" id="search_notes" value="2" th:field="${search.target}"/>
+                <label class="form-label" for="search_notes">Заметки</label>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="user-block">
+          <h3 class="user-name" th:text="${user.username}"></h3>
+          <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Выход" class="button"/>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="page-content">
+      <div class="sidebar" id="sidebar">
+        <button class="button button-big add-btn" onclick="addGroup()">
+          Новая группа
+        </button>
+        <div class="divider"></div>
+        <div id="groupList" class="group-list">
+          <div th:each="groups: ${superGroups}">
+            <div class="group" th:each="group: ${groups}">
+              <div th:id="${group.id} + 'group'">
+                <button th:class= "'button button-big ' + (${group.id eq selectedGroup}?'active')"
+                        th:onclick="${group.id != selectedGroup}?('location.replace(\'/home/'+${group.id} + '/-1\')')">
+                  <div class=""
+                       th:id="${group.id}"
+                       th:onclick ="${group.testFlag(8) or (group.id != selectedGroup)}?'':('event.stopPropagation()')"
+                       th:text="${group.name}">
+                  </div>
+                </button>
+              </div>
+              <div class="group-buttons" th:if="${group.id eq selectedGroup}">
+                <button th:unless="${group.testFlag(1)}"
+                        th:onclick="'removeGroup('+${group.id}+');event.stopPropagation()'" class="button delete-btn">
+                  Удалить
+                </button>
+                <button th:unless="${group.testFlag(8)}"
+                        th:onclick="'renameGroup('+${group.id}+')'" class="button rename-btn">
+                  Переименовать
+                </button>
+                <button th:unless="${group.testFlag(16)}"
+                        th:onclick="'location.replace(\'/request/new_note/'+${group.id}+'\')'" class="button add-btn">
+                  Новая заметка
+                </button>
+              </div>
+              <div class="notes" th:if="${group.id eq selectedGroup}">
+                <div class="note-teaser" th:each="note: ${notes}" th:id="${note.id} + 'note'">
+                  <button th:onclick="'location.replace(\'/home/'+${selectedGroup}+'/'+${note.id}+'\')'"
+                          th:class="'button button-big ' + (${note.id eq selectedNote}?'active')">
+                    <div class="note-info">
+                      <div class="note-name" th:id="${note.id}" th:text="${note.name}"></div>
+                      <div class="note-description" th:text="${note.description}"></div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="note-full" th:if="${noteIsSelected}">
+        <div class="note-buttons">
+          <button class="button save-btn" th:onclick="'saveNote('+ ${selectedNote} + ',true)'">Сохранить</button>
+          <button class="button delete-btn" th:onclick="'removeNote('+ ${selectedNote} + ')'">Удалить</button>
+        </div>
+        <label for="noteName" class="form-label">Заголовок</label>
+        <input onchange="saveNote(noteID, false)" autocomplete="off" id="noteName" type="text" placeholder="" th:field="${note.name}" class="form-input"/>
+        <label for="noteBody" class="form-label">Текст заметки</label>
+        <textarea onchange="saveNote(noteID, false)" id="noteBody" class="form-input" placeholder="" th:field="${note.content}"></textarea>
+      </div>
+    </div>
+  </body>
+</html>
