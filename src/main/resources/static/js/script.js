@@ -41,7 +41,7 @@ function warning(message, args, yesFunction, noFunction) {
     yesButton.setAttribute("onclick", "setYes(formArguments); closeForm(); event.stopPropagation()");
     yesButton.textContent = "Да";
     yesButton.setAttribute("class", "button primary-btn");
-    sidebar.appendChild(messagePlate);
+    sidebar.insertBefore(messagePlate, sidebar.firstChild);
     messagePlate.appendChild(buttons);
     buttons.appendChild(yesButton);
     buttons.appendChild(noButton);

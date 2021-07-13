@@ -221,6 +221,7 @@ input, textarea {
   background-color: #a2a2d0;
   border-radius: 10px;
   text-align: center;
+  margin-bottom: 50px;
 }
 .message-buttons {
   display: flex;
