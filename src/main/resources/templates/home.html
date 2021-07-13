@@ -9,24 +9,6 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
     <script type="text/javascript" src="/js/script.js"></script>
     <script th:if="${noteIsSelected}" th:text="'noteID = ' + ${selectedNote}"></script>
-    <script th:if="${noteIsSelected}">
-      function saveNote(srcId, upd) {
-        let note_name = document.getElementById("noteName")
-        let note_body = document.getElementById("noteBody")
-        axios.get("/request/save_note", {
-            withCredentials: true,
-            params: {
-                "id": srcId,
-                "name": note_name.value,
-                "body": note_body.value
-            }
-        }).then(function (object){
-            if (upd) {
-                location.reload()
-            }
-        });
-      }
-    </script>
     <title>Заметки</title>
   </head>
   <body id="body">
@@ -60,30 +42,26 @@
         <div class="user-block">
           <h3 class="user-name" th:text="${user.username}"></h3>
           <form th:action="@{/logout}" method="post">
-            <input type="submit" value="Выход" class="button"/>
+            <input type="submit" value="Выход" class="button delete-btn"/>
           </form>
         </div>
       </div>
     </header>
     <div class="page-content">
       <div class="sidebar" id="sidebar">
-        <button class="button button-big add-btn" onclick="addGroup()">
-          Новая группа
-        </button>
+        <button class="button button-big add-btn" onclick="addGroup()">Новая группа</button>
         <div class="divider"></div>
         <div id="groupList" class="group-list">
           <div th:each="groups: ${superGroups}">
-            <div class="group" th:each="group: ${groups}">
-              <div th:id="${group.id} + 'group'">
-                <button th:class= "'button button-big ' + (${group.id eq selectedGroup}?'active')"
-                        th:onclick="${group.id != selectedGroup}?('location.replace(\'/home/'+${group.id} + '/-1\')')">
-                  <div class=""
-                       th:id="${group.id}"
-                       th:onclick ="${group.testFlag(8) or (group.id != selectedGroup)}?'':('event.stopPropagation()')"
-                       th:text="${group.name}">
-                  </div>
-                </button>
-              </div>
+            <div class="group" th:each="group: ${groups}" th:id="${group.id} + 'group'">
+              <button th:class= "'button button-big ' + (${group.id eq selectedGroup}?'active')"
+                      th:onclick="${group.id != selectedGroup}?('location.replace(\'/home/'+${group.id} + '/-1\')')">
+                <div class=""
+                     th:id="${group.id}"
+                     th:onclick ="${group.testFlag(8) or (group.id != selectedGroup)}?'':('event.stopPropagation()')"
+                     th:text="${group.name}">
+                </div>
+              </button>
               <div class="group-buttons" th:if="${group.id eq selectedGroup}">
                 <button th:unless="${group.testFlag(1)}"
                         th:onclick="'removeGroup('+${group.id}+');event.stopPropagation()'" class="button delete-btn">
@@ -94,7 +72,7 @@
                   Переименовать
                 </button>
                 <button th:unless="${group.testFlag(16)}"
-                        th:onclick="'location.replace(\'/request/new_note/'+${group.id}+'\')'" class="button add-btn">
+                        th:onclick="'location.replace(\'/request/new_note/'+${group.id}+'\')'" class="button primary-btn">
                   Новая заметка
                 </button>
               </div>
@@ -115,7 +93,7 @@
       </div>
       <div class="note-full" th:if="${noteIsSelected}">
         <div class="note-buttons">
-          <button class="button save-btn" th:onclick="'saveNote('+ ${selectedNote} + ',true)'">Сохранить</button>
+          <button class="button primary-btn" th:onclick="'saveNote('+ ${selectedNote} + ',true)'">Сохранить</button>
           <button class="button delete-btn" th:onclick="'removeNote('+ ${selectedNote} + ')'">Удалить</button>
         </div>
         <label for="noteName" class="form-label">Заголовок</label>

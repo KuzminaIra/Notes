@@ -9,11 +9,25 @@
     <title>Ошибка</title>
   </head>
 
-  <body class="container">
-    <div class="row">
-      <h1 class="">Произошла ошибка</h1>
-      <h3 class="">Попробуйте снова позже</h3>
-      <a th:href="@{/login}" class="">Вернуться на главную</a>
+  <body>
+    <header class="header">
+      <div class="header-backlink">
+        <a th:href="@{/}" class="header-title">Заметки</a>
+      </div>
+      <div class="header-actions-block">
+        <div class="user-block">
+          <button class="button primary-btn" onclick="location.replace('/login')">Войти</button>
+        </div>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row error-row">
+        <div class="error-plate">
+          <h1 class="">Произошла ошибка</h1>
+          <h3 class="">Попробуйте снова позже</h3>
+          <a th:href="@{/login}" class="">Вернуться на главную</a>
+        </div>
+      </div>
     </div>
   </body>
 </html>

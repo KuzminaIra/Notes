@@ -9,51 +9,46 @@
     <title>Список заметок</title>
   </head>
 
-  <body class="container">
-    <div class="row">
-      <header class="">
-        <div class="">
-          <a th:href="@{/}">
-            На главную
-          </a>
+  <body>
+    <header class="header">
+      <div class="header-backlink">
+        <a th:href="@{/}" class="header-title">Заметки</a>
+      </div>
+      <div class="header-actions-block">
+        <div class="user-block">
+          <button class="button primary-btn" onclick="location.replace('/login')">Войти</button>
         </div>
-        <div class="">
-          <h1 class="">Заметки</h1>
-        </div>
-        <div class="">
-        </div>
-        <div class="">
-          <button class="" onclick="location.replace('/login')">
-            Войти
-          </button>
-        </div>
-      </header>
-      <div class="">
-        <div class="">
-          <form action="#" th:action="@{/registration}" th:object="${form}" method="post">
-            <h2 class="">Регистрация</h2>
-            <div>
-              <div>Имя пользователя:</div>
-              <div><input сlass="" type="text" required="required" th:field="${form.username}"/></div>
-              <div th:if="${eName}">
-                <div class="error">Пользователь с таким именем уже существует</div>
-              </div>
-              <div>Почта:</div>
-              <div><input сlass="" required="required" type="email" th:field="${form.email}"/></div>
-              <div>Пароль:</div>
-              <div><input сlass="" required="required" type="password" th:field="${form.password}"/></div>
-              <div>Подтвердите пароль:</div>
-              <div><input сlass="" required="required" type="password" th:field="${form.passwordConf}"/></div>
-              <div th:if="${eConf}">
-                <div class="error">Пароли не совпадают</div>
-              </div>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row promo-row">
+        <form action="#" th:action="@{/registration}" th:object="${form}" method="post" class="promo-form">
+          <h2>Регистрация</h2>
+          <div class="promo-form-body">
+            <div class="promo-form-error" th:if="${eName}">Пользователь с таким именем уже существует</div>
+            <div class="form-item">
+              <div class="form-label">Имя пользователя:</div>
+              <div class="form-input"><input type="text" required="required" th:field="${form.username}"/></div>
             </div>
-            <div class="">
-              <input class="" type="submit" value="Создать аккаунт"/>
+            <div class="form-item">
+              <div class="form-label">Почта:</div>
+              <div class="form-input"><input required="required" type="email" th:field="${form.email}"/></div>
             </div>
-            <div class=""><a th:href="@{/login}">Войти.</a></div>
-          </form>
-        </div>
+            <div class="form-item">
+              <div class="form-label">Пароль:</div>
+              <div class="form-input"><input required="required" type="password" th:field="${form.password}"/></div>
+            </div>
+            <div class="form-item">
+              <div class="form-label">Подтвердите пароль:</div>
+              <div class="form-input"><input required="required" type="password" th:field="${form.passwordConf}"/></div>
+            </div>
+            <div th:if="${eConf}" class="promo-form-error">Пароли не совпадают</div>
+          </div>
+          <div class="form-item">
+            <input class="button" type="submit" value="Создать аккаунт"/>
+          </div>
+          <button class="button primary-btn" onclick="location.replace('/login')">Войти</button>
+        </form>
       </div>
     </div>
   </body>

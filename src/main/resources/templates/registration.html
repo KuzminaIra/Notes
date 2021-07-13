@@ -9,41 +9,47 @@
     <title>Регистрация</title>
   </head>
 
-  <body class="container">
-    <div class="row">
-      <form action="#" th:action="@{/registration}" th:object="${form}" method="post">
-        <h2 class="">Регистрация</h2>
-        <table>
-          <tr>
-            <td>Имя пользователя:</td>
-            <td><input сlass="" type="text" maxlength="20" placeholder="Username" required="required" th:field="${form.username}"/></td>
-          </tr>
-          <tr th:if="${eName}">
-            <td></td>
-            <td class="error">Такйо пользователь существует</td>
-          </tr>
-          <tr>
-            <td>Почта:</td>
-            <td><input сlass="" required="required" type="email" placeholder="example@example.com" th:field="${form.email}"/></td>
-          </tr>
-          <tr>
-            <td>Пароль:</td>
-            <td><input сlass="" required="required" type="password" placeholder="Пароль" th:field="${form.password}"/></td>
-          </tr>
-          <tr>
-            <td>Подтвердите пароль:</td>
-            <td><input сlass="" required="required" type="password" placeholder="Пароль" th:field="${form.passwordConf}"/></td>
-          </tr>
-          <tr th:if="${eConf}">
-            <td></td>
-            <td class="error">Введены несовпадающие пароли</td>
-          </tr>
-        </table>
-        <div class="">
-          <input class ="" type="submit" value="Создать аккаунт"/>
+  <body>
+    <header class="header">
+      <div class="header-backlink">
+        <a th:href="@{/}" class="header-title">Заметки</a>
+      </div>
+      <div class="header-actions-block">
+        <div class="user-block">
+          <button class="button primary-btn" onclick="location.replace('/login')">Войти</button>
         </div>
-        <div><a th:href="@{/login}">Войти.</a></div>
-      </form>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row promo-row">
+        <form action="#" th:action="@{/registration}" th:object="${form}" method="post" class="promo-form">
+          <h2>Регистрация</h2>
+          <div class="promo-form-body">
+            <div class="promo-form-error" th:if="${eName}">Пользователь с таким именем уже существует</div>
+            <div class="form-item">
+              <div class="form-label">Имя пользователя:</div>
+              <div class="form-input"><input type="text" required="required" th:field="${form.username}"/></div>
+            </div>
+            <div class="form-item">
+              <div class="form-label">Почта:</div>
+              <div class="form-input"><input required="required" type="email" th:field="${form.email}"/></div>
+            </div>
+            <div class="form-item">
+              <div class="form-label">Пароль:</div>
+              <div class="form-input"><input required="required" type="password" th:field="${form.password}"/></div>
+            </div>
+            <div class="form-item">
+              <div class="form-label">Подтвердите пароль:</div>
+              <div class="form-input"><input required="required" type="password" th:field="${form.passwordConf}"/></div>
+            </div>
+            <div th:if="${eConf}" class="promo-form-error">Пароли не совпадают</div>
+          </div>
+          <div class="form-item">
+            <input class="button" type="submit" value="Создать аккаунт"/>
+          </div>
+          <button class="button primary-btn" onclick="location.replace('/login')">Войти</button>
+        </form>
+      </div>
     </div>
   </body>
 </html>

@@ -41,28 +41,32 @@
         <div class="user-block">
           <h3 class="user-name" th:text="${user.username}"></h3>
           <form th:action="@{/logout}" method="post">
-            <input type="submit" value="Выход" class="button"/>
+            <input type="submit" value="Выход" class="button delete-btn"/>
           </form>
         </div>
       </div>
     </header>
     <div class="page-content">
-      <div class="search-results">
-        <div class="search-results-info">
-          <h1>Результат</h1>
-          <div class="search-results-backlink"><a th:href="@{/}">Вернуться на главную</a></div>
-        </div>
-        <div th:if="${isNotes}">
-          <a th:each="note: ${list}" class="search-result" th:href="'/home/'+${note.group.id}+'/'+${note.id}">
-            <div th:text="'\'' + ${note.name} + '\''"></div>
-            <div th:text="'Содержимое: ' + ${note.description}"></div>
-          </a>
-        </div>
-        <div th:unless="${isNotes}">
-          <a th:each="group: ${list}" class="search-result" th:href="'/home/'+${group.id}+'/-1'">
-            <div th:text="'\'' + ${group.name} + '\''"></div>
-            <div th:text="'Заметок: ' + ${group.notes.size()}"></div>
-          </a>
+      <div class="container">
+        <div class="row">
+          <div class="search-result">
+            <div class="search-result-info">
+              <h1>Результат</h1>
+              <div class="search-result-backlink"><a th:href="@{/}">Вернуться на главную</a></div>
+            </div>
+            <div th:if="${isNotes}" class="search-result-items">
+              <a th:each="note: ${list}" class="search-result-item" th:href="'/home/'+${note.group.id}+'/'+${note.id}">
+                <div class="search-result-item-title"  th:text="'\'' + ${note.name} + '\''"></div>
+                <div class="search-result-item-content" th:text="'Содержимое: ' + ${note.description}"></div>
+              </a>
+            </div>
+            <div th:unless="${isNotes}" class="search-result-items">
+              <a th:each="group: ${list}" class="search-result-item" th:href="'/home/'+${group.id}+'/-1'">
+                <div class="search-result-item-title"  th:text="'\'' + ${group.name} + '\''"></div>
+                <div class="search-result-item-content" th:text="'Заметок: ' + ${group.notes.size()}"></div>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

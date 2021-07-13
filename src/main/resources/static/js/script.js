@@ -4,6 +4,23 @@ setYes = null;
 setNo  = null;
 closeForm = null;
 
+function saveNote(srcId, upd) {
+    let note_name = document.getElementById("noteName")
+    let note_body = document.getElementById("noteBody")
+    axios.get("/request/save_note", {
+        withCredentials: true,
+        params: {
+            "id": srcId,
+            "name": note_name.value,
+            "body": note_body.value
+        }
+    }).then(function (object){
+        if (upd) {
+            location.reload()
+        }
+    });
+  }
+
 function warning(message, args, yesFunction, noFunction) {
     formArguments = args;
     setYes = yesFunction;
@@ -11,7 +28,7 @@ function warning(message, args, yesFunction, noFunction) {
     let sidebar = document.getElementById("sidebar");
     let messagePlate = document.createElement("div");
     messagePlate.setAttribute("class", "message");
-    let info = document.createElement("h6");
+    let info = document.createElement("h4");
     info.textContent = message;
     messagePlate.appendChild(info);
     let buttons = document.createElement("div");
@@ -19,15 +36,15 @@ function warning(message, args, yesFunction, noFunction) {
     let noButton = document.createElement("button");
     noButton.setAttribute("onclick", "setNo(formArguments); closeForm(); event.stopPropagation()");
     noButton.textContent = "Нет";
-    noButton.setAttribute("class", "button");
+    noButton.setAttribute("class", "button delete-btn");
     let yesButton = document.createElement("button");
     yesButton.setAttribute("onclick", "setYes(formArguments); closeForm(); event.stopPropagation()");
     yesButton.textContent = "Да";
-    yesButton.setAttribute("class", "button");
+    yesButton.setAttribute("class", "button primary-btn");
     sidebar.appendChild(messagePlate);
     messagePlate.appendChild(buttons);
-    buttons.appendChild(noButton);
     buttons.appendChild(yesButton);
+    buttons.appendChild(noButton);
     closeForm = function() {
         messagePlate.remove();
     }
@@ -63,12 +80,17 @@ function removeNoteAccepted(srcId) {
 function renameGroup(srcId) {
     let name = document.getElementById(srcId);
     let defaultValue = name.textContent;
+    let group = document.getElementById(srcId + "group");
     let element = document.createElement("input");
     element.setAttribute("type", "text");
-    element.setAttribute("class", "group-edit");
+    element.setAttribute("class", "form-input");
+    element.setAttribute("value", defaultValue);
     let renameButton = document.createElement("button");
     renameButton.setAttribute("type", "button");
-    renameButton.textContent = "Добавить";
+    renameButton.setAttribute("class", "button primary-btn group-rename-btn");
+    renameButton.textContent = "Подтвердить переименование";
+    group.insertBefore(element, group.firstChild);
+    group.insertBefore(renameButton, group.firstChild);
     renameButton.addEventListener('click', function (event) {
         if ((element.value == null) || (element.value === "")) {
             name.textContent = defaultValue;
@@ -82,6 +104,7 @@ function renameGroup(srcId) {
                 }
             });
         }
+        renameButton.remove();
         element.remove();
     });
     element.addEventListener('keyup', function (ev) {
@@ -99,10 +122,10 @@ function addGroup() {
     let list = document.getElementById("groupList");
     let element = document.createElement("input");
     element.setAttribute("type", "text");
-    element.setAttribute("class", "form-input");
+    element.setAttribute("class", "form-input group-add-input");
     let addButton = document.createElement("button");
     addButton.setAttribute("type", "button");
-    addButton.setAttribute("class", "button add-btn");
+    addButton.setAttribute("class", "button primary-btn group-add-btn");
     addButton.textContent = "Добавить";
     list.insertBefore(element, list.firstChild);
     list.insertBefore(addButton, list.firstChild);
