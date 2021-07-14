@@ -257,7 +257,7 @@ input, textarea {
   box-shadow: 0 5px 5px -5px #a2a2d0;
   margin-bottom: 8px;
 }
-.search-result-item:nth-of-type(5n - 1) {
+.search-result-item:nth-of-type(4n + 4) {
   margin-right: 0px;
 }
 .search-result-item-title {
